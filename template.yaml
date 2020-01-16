@@ -75,9 +75,9 @@ Resources:
       Environment:
         Variables:
           BUCKET_NAME: !Ref ImageStore
-        Policies:
-          - S3CrudPolicy:
-              BucketName: !Ref ImageStore
+      Policies:
+        - S3CrudPolicy:
+            BucketName: !Ref ImageStore
       Events:
         GetImages:
           Type: Api
