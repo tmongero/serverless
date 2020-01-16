@@ -441,11 +441,11 @@ Resources:
 #                success_response = event['OldResourceProperties']
 #
 #            cfnresponse.send(event, context, cfnresponse.SUCCESS, success_response)
-
-  CreateGlobalDynamoDBTable:
-    Type: AWS::CloudFormation::CustomResource
-    Condition: IsPrimaryRegion
-    Properties:
-      ServiceToken: !GetAtt GlobalDynamoDBTableSetup.Arn
-      TableName: !Ref ImageDatabase
-      Regions: !Ref DeploymentRegions
+#
+#  CreateGlobalDynamoDBTable:
+#    Type: AWS::CloudFormation::CustomResource
+#    Condition: IsPrimaryRegion
+#    Properties:
+#      ServiceToken: !GetAtt GlobalDynamoDBTableSetup.Arn
+#      TableName: !Ref ImageDatabase
+#      Regions: !Ref DeploymentRegions
