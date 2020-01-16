@@ -4,10 +4,14 @@ import hashlib
 import json
 import os
 
+from aws_xray_sdk.core import patch
 import boto3
 from requests_toolbelt import multipart
 
+patch(["boto3"])
+
 ACCEPTED_CONTENT_TYPE = 'multipart/form-data'
+AWS_REGION = os.getenv('AWS_REGION')
 BUCKET_NAME = os.getenv('BUCKET_NAME')
 
 s3_client = boto3.client('s3')

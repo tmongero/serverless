@@ -1,28 +1,28 @@
 import json
 import os
 
+from aws_xray_sdk.core import patch
 import boto3
+from boto3.dynamodb.conditions import Key
 
-BUCKET_NAME = os.getenv('BUCKET_NAME')
+patch(["boto3"])
 
-s3_paginator = boto3.client('s3').get_paginator('list_objects_v2')
+TABLE_NAME = os.getenv('TABLE_NAME')
+
+dynamodb = boto3.resource('dynamodb').Table(TABLE_NAME)
 
 
 def lambda_handler(event, context):
-    object_list = list()
+    client_token_claims = event['requestContext']['authorizer']['claims']
 
-    response = s3_paginator.paginate(Bucket=BUCKET_NAME, Prefix='waiting-room')
+    response = dynamodb.query(
+        KeyConditionExpression=Key('pk').eq(client_token_claims['client_id'])
+    )
 
-
-    for page in response:
-        for item in page['Contents']:
-            object_list.append(
-                {
-                    'filename': item['Key'],
-                    'size': item['Size'],
-                    'last_modified': item['LastModified'].isoformat()
-                }
-            )
+    image_list = [
+        {"filename": i['filename'], "sha256": i['sha256']}
+        for i in response['Items']
+    ]
 
     return {
         "isBase64Encoded": False,
@@ -33,7 +33,7 @@ def lambda_handler(event, context):
                 "path": event['path'],
                 "method": event['httpMethod'],
                 "token_claims": event['requestContext']['authorizer']['claims'],
-                "files": object_list
+                "files": image_list
             }
         ),
         "headers": {

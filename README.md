@@ -1,24 +1,26 @@
 # SubZero Workshop
 
-## Image Uploads
+## Pipeline Update
 
-Lambda functions associated with the API Gateway endpoints will now process uploaded images and return data about those uploaded images.
+Update your pipeline using [pipeline-template.yaml](pipeline-template.yaml) before continuing.
 
-Each Lambda function servers a specific purpose. `Upload` accepts an image file and writes it to an S3 bucket. The `List` function returns a JSON array of all the uploaded files.
+## Image Processing
+
+A Step Function on the backend will not take uploaded image files and process them. This will include de-duplicating images, creating additional resized versions, and linking the uploaded user to the file in a DynamoDB table.
+
+The `List` Lambda function now queries the DynamoDB table only for files associated to the authenticated client instead of scanning the S3 bucket.
 
 ### AWS Services / Features
 
-- S3
-- IAM
+- DynamoDB
+- Global DynamoDB Tables
+- SQS
+- Step Functions
 
 ### Module Challenge
 
-The `GET /api/images` endpoint is not functioning. Compare the `List` Lambda function resource to the `Upload` functionn and add the missing elements required to grant S3 read permissions.
+Add additional states to the `StateMachine` JSON definition for the following image sizes: 512 and 256. Use the 1024 state as a baseline and modify as needed.
 
-Reference the [SAM Policy Templates](https://docs.aws.amazon.com/serverless-application-model/latest/developerguide/serverless-policy-templates.html) documentation to find the appropriate role.
-
-As an additional challenge make use of SAM's `Globals` feature.
-
-### Next Module: [Image Processing](../5_Image_Processing/)
+### Next Module: [Monitoring](../6_Monitoring/)
 
 Once instructed, move on to the next module and update your repository with the provided files (overwrite existing files and your changes).

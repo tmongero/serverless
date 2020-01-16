@@ -7,6 +7,7 @@ phases:
       - pip3 install -U aws-sam-translator
   build:
     commands:
+      - touch requirements.txt
       - |
         sam build \
           --region "${AWS_REGION}" \

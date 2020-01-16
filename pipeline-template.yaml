@@ -246,10 +246,16 @@ Resources:
                 RoleArn: !GetAtt CloudFormationRole.Arn
                 StackName: !Sub ${AppName}-subzero-workshop
                 TemplatePath: !Sub 'BuildArtifact::packaged-${DeploymentRegion1}.yaml'
-                ParameterOverrides: !Sub |
-                  {
-                    "AppName": "${AppName}"
-                  }
+                ParameterOverrides: !Sub
+                  - |
+                    {
+                      "AppName": "${AppName}",
+                      "DeploymentRegions": "${DeploymentRegions}"
+                    }
+                  - DeploymentRegions: !Join
+                      - ','
+                      - - !Ref DeploymentRegion1
+                        - !Ref DeploymentRegion2
               RunOrder: 1
 
             - Name: !Ref DeploymentRegion2
@@ -268,10 +274,16 @@ Resources:
                 RoleArn: !GetAtt CloudFormationRole.Arn
                 StackName: !Sub ${AppName}-subzero-workshop
                 TemplatePath: !Sub 'BuildArtifact::packaged-${DeploymentRegion2}.yaml'
-                ParameterOverrides: !Sub |
-                  {
-                    "AppName": "${AppName}"
-                  }
+                ParameterOverrides: !Sub
+                  - |
+                    {
+                      "AppName": "${AppName}",
+                      "DeploymentRegions": "${DeploymentRegions}"
+                    }
+                  - DeploymentRegions: !Join
+                      - ','
+                      - - !Ref DeploymentRegion1
+                        - !Ref DeploymentRegion2
               RunOrder: 1
 
   PipelineWebHook:
