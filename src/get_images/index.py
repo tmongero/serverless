@@ -11,7 +11,8 @@ s3_paginator = boto3.client('s3').get_paginator('list_objects_v2')
 def lambda_handler(event, context):
     object_list = list()
 
-    response = s3_paginator.paginate(Bucket=BUCKET_NAME, Prefix='waiting-room')
+    response = s3_paginator.paginate(Bucket=BUCKET_NAME, Prefix='waiting-room').paginate()
+
 
     for page in response:
         for item in page['Contents']:
